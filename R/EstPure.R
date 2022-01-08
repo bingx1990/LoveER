@@ -1,20 +1,20 @@
 ####### This script contains functions to estimate the pure node set ##########
-source("Utilities.R")
+# source("Utilities.R")
 
 
 FindPureNode = function(off_Sigma, delta, Ms, arg_Ms, se_est, merge) {
   # Estimate list of pure node indices for given {@code Sigma} and {@delta}.
-  # 
-  # Args: 
+  #
+  # Args:
   #   Sigma: p by p sample covariance matrix.
   #   delta: numerical constant.
   #   Ms: the largest absolute values of each row of Sigma.
   #
-  # Returns: 
+  # Returns:
   #   a list including:
   #     the list of the estimated pure node indices
   #     the vector of the estimated pure node indices
-  
+
   G <- list()
 
   for (i in 1:nrow(off_Sigma)) {
@@ -39,11 +39,11 @@ FindRowMax <- function(Sigma) {
   #
   # Args:
   #   Sigma: p by p matrix
-  # 
+  #
   # Returns:
   #   length p vector
   p <- nrow(Sigma)
-  M <- arg_M <- rep(0, p)  
+  M <- arg_M <- rep(0, p)
   for (i in 1:p) {
     row_i <- Sigma[i,]
     arg_M[i] <- which.max(row_i)
@@ -55,7 +55,7 @@ FindRowMax <- function(Sigma) {
 FindRowMaxInd <- function(i, M, arg_M, vector, delta, se_est) {
   # Calculate indices of ith row such that the absolute values of these indices
   # are within 2 * delta from the maximal absolute value {@code M} of this row.
-  # 
+  #
   # Args:
   #   i: integer denoting for the ith row.
   #   M: the maximal absolute value of the ith row.
@@ -64,7 +64,7 @@ FindRowMaxInd <- function(i, M, arg_M, vector, delta, se_est) {
   #
   # Returns:
   #   a vector of indices.
-  lbd <- delta * se_est[i] * se_est[arg_M] + delta * se_est[i] * se_est 
+  lbd <- delta * se_est[i] * se_est[arg_M] + delta * se_est[i] * se_est
   indices <- which(M <= lbd + vector)
   return(indices)
 }
@@ -115,14 +115,14 @@ TestPure <- function(Sigma_row, rowInd, Si, Ms, arg_Ms, delta, se_est) {
 
 
 FindSignPureNode <- function(pureList, Sigma) {
-  # Estimate the sign subpartition of pure node sets. If there is an element 
+  # Estimate the sign subpartition of pure node sets. If there is an element
   # of a list is empty, then a empty list will be put in that position
-  # 
-  # Args: 
+  #
+  # Args:
   #   pureList: list of pure node indices (Example: list(c(1,2,3),c(4,5,6,7)))
   #   Sigma: p by p sample covariance
   #
-  # Returns: 
+  # Returns:
   #   list of sign subpartition of pure node indices.
   #   Example: list(list(c(1,2),3),list(c(4,7),c(5,6)))
   signPureList <- list()
@@ -158,7 +158,7 @@ Merge <- function(groupList, groupVec) {
         return(groupList)
       }
     }
-  } 
+  }
   groupList <- append(groupList, list(groupVec))
   return(groupList)
 }
@@ -171,14 +171,14 @@ Merge_union <- function(groupList, groupVec) {
     }, y = groupVec)
     common_inds <- which(common_groups > 0)
     if (length(common_inds) > 0){
-      new_group <- unlist(lapply(common_inds, 
+      new_group <- unlist(lapply(common_inds,
                                         FUN = function(x, y){y[[x]]}, y = groupList))
-      remain_group <- lapply(which(common_groups == 0), 
+      remain_group <- lapply(which(common_groups == 0),
                              FUN = function(x, y){y[[x]]}, y = groupList)
       groupList <- append(remain_group, list(union(groupVec, new_group)))
       return(groupList)
     }
-  } 
+  }
   groupList <- append(groupList, list(groupVec))
   return(groupList)
 }
@@ -187,11 +187,11 @@ Merge_union <- function(groupList, groupVec) {
 
 RecoverAI <- function(estGroupList, p) {
   # Recover the estimated submatrix A_I by given the pure node group.
-  # 
+  #
   # Args:
   #   estGroupList: list of group indices of the pure node with sign.
   #
-  # Returns: 
+  # Returns:
   #   p by K matrix.
   K <- length(estGroupList)
   A <- matrix(0, p, K)
@@ -199,22 +199,22 @@ RecoverAI <- function(estGroupList, p) {
     groupi <- estGroupList[[i]]
     A[groupi[[1]],i] <- 1
     groupi2 <- groupi[[2]]
-    if (length(groupi2) != 0) 
+    if (length(groupi2) != 0)
       A[groupi2, i] <- -1
   }
   return(A)
 }
 
 EstAI <- function(Sigma, optDelta, se_est, merge) {
-  # Use the given {@code optDelta} to calculate the fitted AI, pure variable 
-  # indices in list form and vector form. Also return estimated Y and C for 
+  # Use the given {@code optDelta} to calculate the fitted AI, pure variable
+  # indices in list form and vector form. Also return estimated Y and C for
   # the following Dantzig estimation.
   #
-  # Args: 
+  # Args:
   #   Sigma: p by p covariance matrix.
   #   optDelta: optDelta to be used.
   #
-  # Return: 
+  # Return:
   #   the list including:
   #     AI: the p by K estimated AI
   #     pureVec: vector of the indices of estimated pure variables
@@ -224,14 +224,14 @@ EstAI <- function(Sigma, optDelta, se_est, merge) {
   result_Ms <- FindRowMax(off_Sigma)
   Ms <- result_Ms$M
   arg_Ms <- result_Ms$arg_M
-  
+
   resultPure <- FindPureNode(off_Sigma, optDelta, Ms, arg_Ms, se_est, merge)
   estPureIndices <- resultPure$pureInd
   estPureVec <- resultPure$pureVec
-  
+
   estSignPureIndices <- FindSignPureNode(estPureIndices, Sigma)
   AI <- RecoverAI(estSignPureIndices, nrow(off_Sigma))
-  
+
   return(list(AI = AI, pureVec = estPureVec, pureSignInd = estSignPureIndices))
 }
 

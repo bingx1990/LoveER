@@ -1,27 +1,52 @@
 ########################################################################
 ########                  Essential Regression                ##########
 ########################################################################
-source("CV.R")
-source("EstNonpure.R")
-source("EstPure.R")
-source("Utilities.R")
-source("EstOmega.R")
-source("ER_estimation_Dz.R")
-source("ER_estimation_LS.R")
-source("LOVE.R")
-source("ER_prediction.R")
+# source("CV.R")
+# source("Utilities.R")
+# source("EstNonpure.R")
+# source("EstPure.R")
+# source("EstOmega.R")
+# source("ER_estimation_Dz.R")
+# source("ER_estimation_LS.R")
+# source("LOVE.R")
+# source("ER_prediction.R")
+# library(linprog)
+
+#' @title Essential Regression
+#'
+#' @description Perform prediction, estimation and inference under Essential Regressions
+#'
+#' @param Y a vector of response with length n.
+#' @param X n by p data matrix.
+#' @param res_LOVE the fitted model from \code{\link{LOVE}}.
+#' @param beta_est the procedure of estimating beta. One of \{"NULL", "LS", "Dantzig"\}
+#' @param mu the tuning parameter used for estimating beta via the Dantzig approach. Default value is 0.5.
+#' @param lbd the tuning parameter used for estimating beta via the Dantzig approach. Default value is 0.5.
+#' @param CI construct confidence intervals if TRUE, otherwise FALSE.
+#' @param alpha_level significance level. Default set to 0.05.
+#' @param correction correction for multiple hypothesis testing. Either NULL or "Bonferroni". Default set to "Bonferroni".
+#
+#' @return a list of objects including: \itemize{
+#'   \item \code{beta} the estimated coefficients beta
+#'   \item \code{beta_CIs} the coordinate-wise confidence intervals of beta
+#'   \item \code{beta_var} the variances of the estimated beta
+#'   \item \code{coef_X} the coefficients between Y and X
+#'   \item \code{mat_trans_to_Z} the p by K matrix used to predict Z
+#'   \item \code{fitted_val} the fitted values
+#'   \item \code{Z_pred} the predicted Z matrix
+#'   \item \code{X_center} the centers of the input X
+#'   \item \code{Y_center} the sample mean of the input Y
+#' }
 
 
-library(MASS)
-
+#' @examples
+#' data(toydata)
+#' output_table <- ER(X = toydata)
+#' @export
 
 
 ER <- function(Y, X, res_LOVE, beta_est = "NULL", mu = 0.5, lbd = 0.5,
                CI = F, alpha_level = 0.05, correction = "Bonferroni") {
-  # beta_est: the procedure of estimating beta. One of {"NULL", "LS", "Dantzig"}
-  # mu, lbd: tuning parameters used for estimating beta via the Dantzig approach
-  # CI: construct confidence intervals if True.
-
 
   n <- nrow(X); p <- ncol(X)
 
@@ -65,8 +90,6 @@ ER <- function(Y, X, res_LOVE, beta_est = "NULL", mu = 0.5, lbd = 0.5,
               Z_pred = pred_result$Z_pred,
               X_center = attr(X, "scaled:center"), Y_center = Y_center))
 }
-
-
 
 
 
