@@ -1,17 +1,30 @@
+########################################################################
+####          Estimation of the coefficients for prediction       ######
+########################################################################
 
-
+#' @title
+#'
+#' @inheritParams ER
+#' @param Theta_hat A \eqn{p} by \eqn{K} matrix.
+#'
+#' @return A list including: \itemize{
+#'   \item \code{theta} The estimated \eqn{p}-dimensional coefficients of \eqn{X}.
+#'   \item \code{mat_trans_to_Z} The \eqn{p} by \eqn{K} matrix used to predict \eqn{Z}.
+#'   \item \code{fitted_val} The fitted values.
+#'   \item \code{Z_pred} The predicted \strong{Z} matrix.
+#' }
 
 ER_prediction <- function(Y, X, Theta_hat) {
   n <- nrow(X)
   Q <- try(Theta_hat %*% solve(crossprod(X %*% Theta_hat) / n, t(Theta_hat)), silent = T)
   if (class(Q)[1] == "try-error")
     Q <- Theta_hat %*% ginv(crossprod(X %*% Theta_hat) / n) %*% t(Theta_hat)
-  
-  theta_hat <- Q %*% crossprod(X, Y) / n 
+
+  theta_hat <- Q %*% crossprod(X, Y) / n
   fitted_val <- X %*% theta_hat
   mat_trans_to_Z <- Q %*% Theta_hat
   Z_hat <- X %*% mat_trans_to_Z
-  return(list(theta = theta_hat, 
+  return(list(theta = theta_hat,
               mat_trans_to_Z = mat_trans_to_Z,
               fitted_val = fitted_val,
               Z_pred = Z_hat))

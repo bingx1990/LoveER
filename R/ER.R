@@ -12,30 +12,33 @@
 # source("ER_prediction.R")
 # library(linprog)
 
+
 #' @title Essential Regression
 #'
-#' @description Perform prediction, estimation and inference under Essential Regressions
+#' @description Under the Essential
+#'  Regression framework \deqn{X = AZ+E,    Y = Z' \beta + \epsilon,}
+#'  perform prediction of \eqn{Y}, estimation and inference of \eqn{\beta}.
 #'
-#' @param Y a vector of response with length n.
-#' @param X n by p data matrix.
-#' @param res_LOVE the fitted model from \code{\link{LOVE}}.
-#' @param beta_est the procedure of estimating beta. One of \{"NULL", "LS", "Dantzig"\}
-#' @param mu the tuning parameter used for estimating beta via the Dantzig approach. Default value is 0.5.
-#' @param lbd the tuning parameter used for estimating beta via the Dantzig approach. Default value is 0.5.
-#' @param CI construct confidence intervals if TRUE, otherwise FALSE.
-#' @param alpha_level significance level. Default set to 0.05.
-#' @param correction correction for multiple hypothesis testing. Either NULL or "Bonferroni". Default set to "Bonferroni".
+#' @param Y A vector of response with length \eqn{n}.
+#' @param X A \eqn{n} by \eqn{p} data matrix.
+#' @param res_LOVE The returned object from \code{\link{LOVE}}.
+#' @param beta_est The procedure used for estimating beta. One of \{\code{NULL}, "LS", "Dantzig"\}
+#' @param mu,lbd The tuning parameter used for estimating beta via the Dantzig approach. The default value is 0.5.
+#' @param CI Logical. TRUE if confidence intervals are constructed.
+#' @param alpha_level The significance level. The default set to 0.05.
+#' @param correction The approach used for addressing the multiple testing problem.
+#'  Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".
 #
-#' @return a list of objects including: \itemize{
-#'   \item \code{beta} the estimated coefficients beta
-#'   \item \code{beta_CIs} the coordinate-wise confidence intervals of beta
-#'   \item \code{beta_var} the variances of the estimated beta
-#'   \item \code{coef_X} the coefficients between Y and X
-#'   \item \code{mat_trans_to_Z} the p by K matrix used to predict Z
-#'   \item \code{fitted_val} the fitted values
-#'   \item \code{Z_pred} the predicted Z matrix
-#'   \item \code{X_center} the centers of the input X
-#'   \item \code{Y_center} the sample mean of the input Y
+#' @return A list of objects including: \itemize{
+#'   \item \code{beta} The estimated coefficients of \eqn{beta}.
+#'   \item \code{beta_CIs} The coordinate-wise confidence intervals of \eqn{beta}.
+#'   \item \code{beta_var} The variances of the estimated \eqn{beta}
+#'   \item \code{coef_X} The estimated p-dimensional coefficient between \eqn{Y} and \eqn{X}.
+#'   \item \code{mat_trans_to_Z} The \eqn{p} by \eqn{K} matrix used to predict \eqn{Z}.
+#'   \item \code{fitted_val} The fitted values of length \eqn{n}.
+#'   \item \code{Z_pred} The predicted \strong{Z} matrix.
+#'   \item \code{X_center} Centers of the input \code{X}.
+#'   \item \code{Y_center} Center of the input \code{Y}.
 #' }
 
 
@@ -45,7 +48,7 @@
 #' @export
 
 
-ER <- function(Y, X, res_LOVE, beta_est = "NULL", mu = 0.5, lbd = 0.5,
+ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
                CI = F, alpha_level = 0.05, correction = "Bonferroni") {
 
   n <- nrow(X); p <- ncol(X)
@@ -70,7 +73,7 @@ ER <- function(Y, X, res_LOVE, beta_est = "NULL", mu = 0.5, lbd = 0.5,
   pred_result <- ER_prediction(Y, X, Theta_hat)
 
 
-  if (beta_est == "NULL" || beta_est == "Dantzig") {
+  if (is.null(beta_est) || beta_est == "Dantzig") {
     beta_hat <- beta_CIs <- beta_var <- NULL
     if (beta_est == "Dantzig") {
       beta_hat <- ER_est_beta_dz(Y, X, A_hat, C_hat, I_hat, optDelta, mu, lbd)
@@ -93,6 +96,14 @@ ER <- function(Y, X, res_LOVE, beta_est = "NULL", mu = 0.5, lbd = 0.5,
 
 
 
+
+#' Predict under Essential Regression
+#'
+#' @param fitted_ER The object returned from \code{\link{ER}}.
+#' @param newX A new data matrix of \eqn{X}. If not provided, the fitted values of
+#'   either \strong{Y} or \strong{Z} are returned, depending on \code{type}.
+#' @param type Either "response" or "factor". For "response", predicted values of
+#'   \eqn{Y} are returned. For "factor", predicted \eqn{Z} is returned.
 
 
 Predict.ER <- function(fitted_ER, newX = NULL, type = "response") {

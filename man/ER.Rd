@@ -8,7 +8,7 @@ ER(
   Y,
   X,
   res_LOVE,
-  beta_est = "NULL",
+  beta_est = "LS",
   mu = 0.5,
   lbd = 0.5,
   CI = F,
@@ -17,41 +17,42 @@ ER(
 )
 }
 \arguments{
-\item{Y}{a vector of response.}
+\item{Y}{A vector of response with length \eqn{n}.}
 
-\item{X}{n by p data matrix.}
+\item{X}{A \eqn{n} by \eqn{p} data matrix.}
 
-\item{res_LOVE}{the fitted model from \code{\link{LOVE}}.}
+\item{res_LOVE}{The returned object from \code{\link{LOVE}}.}
 
-\item{beta_est}{the procedure of estimating beta. One of \{"NULL", "LS", "Dantzig"\}}
+\item{beta_est}{The procedure used for estimating beta. One of \{\code{NULL}, "LS", "Dantzig"\}}
 
-\item{mu}{the tuning parameter used for estimating beta via the Dantzig approach. Default value is 0.5.}
+\item{mu, lbd}{The tuning parameter used for estimating beta via the Dantzig approach. The default value is 0.5.}
 
-\item{lbd}{the tuning parameter used for estimating beta via the Dantzig approach. Default value is 0.5.}
+\item{CI}{Logical. TRUE if confidence intervals are constructed.}
 
-\item{CI}{construct confidence intervals if TRUE, otherwise FALSE.}
+\item{alpha_level}{The significance level. The default set to 0.05.}
 
-\item{alpha_level}{significance level. Default set to 0.05.}
-
-\item{correction}{correction for multiple hypothesis testing. Either NULL or "Bonferroni". Default set to "Bonferroni".}
+\item{correction}{The approach used for addressing the multiple testing problem.
+Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".}
 }
 \value{
-a list of objects including: \itemize{
-  \item \code{beta} the estimated coefficients beta
-  \item \code{beta_CIs} the coordinate-wise confidence intervals of beta
-  \item \code{beta_var} the variances of the estimated beta
-  \item \code{coef_X} the coefficients between Y and X
-  \item \code{mat_trans_to_Z} the p by K matrix used to predict Z
-  \item \code{fitted_val} the fitted values
-  \item \code{Z_pred} the predicted Z matrix
-  \item \code{X_center} the centers of the input X
-  \item \code{Y_center} the sample mean of the input Y
+A list of objects including: \itemize{
+  \item \code{beta} The estimated coefficients of \eqn{beta}.
+  \item \code{beta_CIs} The coordinate-wise confidence intervals of \eqn{beta}.
+  \item \code{beta_var} The variances of the estimated \eqn{beta}
+  \item \code{coef_X} The estimated p-dimensional coefficient between \eqn{Y} and \eqn{X}.
+  \item \code{mat_trans_to_Z} The \eqn{p} by \eqn{K} matrix used to predict \eqn{Z}.
+  \item \code{fitted_val} The fitted values of length \eqn{n}.
+  \item \code{Z_pred} The predicted \strong{Z} matrix.
+  \item \code{X_center} Centers of the input \code{X}.
+  \item \code{Y_center} Center of the input \code{Y}.
 }
 }
 \description{
-Perform prediction, estimation and inference under Essential Regressions
+Under the Essential
+ Regression framework \deqn{X = AZ+E,    Y = Z' \beta + \epsilon,}
+ perform prediction of \eqn{Y}, estimation and inference of \eqn{\beta}.
 }
 \examples{
 data(toydata)
-output_table <- LOVE(X = toydata)
+output_table <- ER(X = toydata)
 }

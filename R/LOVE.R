@@ -1,34 +1,38 @@
 ########################################################################################
 ##########                                                                ##############
-##########              Latent model based OVErlap clustering             ##############
+##########              Latent-model based OVErlap clustering             ##############
 ##########                                                                ##############
 ########################################################################################
 
-#' @title Latent-model based OVErlapping clustering
+#' @title LOVE: Latent-model based OVErlapping clustering
 #'
-#' @description Perform overlappig variable clustering of p features
-#' collected in n samples under latent factor models
+#' @description Perform overlapping (variable) clustering of a \eqn{p}-dimensional feature
+#' generated from the latent factor model \deqn{X = AZ + E} with identifiability
+#' conditions on \eqn{A} and \eqn{Cov(Z)}.
 #'
-#' @param X n by p data matrix.
-#' @param delta the grid of leading constant for \eqn{\delta}. Default grid is seq(0.1, 1.1 ,0.1).
-#' @param lbd the grid of leading constants for \eqn{\lambda}. Default value is 0.5.
-#' @param mu the leading constant used for thresholding the loading matrix. Default value is 0.5.
-#' @param merge if TRUE, take the union of all candidate pure variables; otherwise, take the intersection. Default set to FALSE.
-#' @param diagonal TRUE if the covariance matrix of \eqn{Z} is diagonal; else FALSE
-#' @param est_non_pure_row procedure used for estimating the non-pure rows. One of \{"HT", "ST", "Dantzig"\}
-#' @param center_flag center the features if TRUE.
-#' @param equal_var True if all features have equal variance.
-#' @param rep_CV the number of repetitions used for cross validation.
+#' @param X A \eqn{n} by \eqn{p} data matrix.
+#' @param delta The grid of leading constant of \eqn{\delta}.
+#' @param lbd The grid of leading constant of \eqn{\lambda}.
+#' @param mu The leading constant used for thresholding the loading matrix.
+#' @param merge Logical. If TRUE, take the union of all candidate pure variables;
+#'   otherwise, take the intersection.
+#' @param diagonal Logical. If TRUE, the covariance matrix of \eqn{Z} is diagonal; else FALSE.
+#' @param est_non_pure_row String. Procedure used for estimating the non-pure rows. One of \{"HT", "ST", "Dantzig"\}.
+#' @param center_flag Logical. If TRUE, center the features.
+#' @param equal_var Logical. TRUE if all features have equal variance.
+#' @param rep_CV The number of repetitions used for cross validation.
+#' @param verbose Logical. Set FALSE to suppress printing the progress.
 #
-#' @return a list of objects including: \itemize{
-#'   \item \code{K} the number of clusters.
-#'   \item \code{pureVec} the set of pure variables.
-#'   \item \code{pureInd} the partition of pure variables.
-#'   \item \code{group} the clusters (indices for each cluster).
-#'   \item \code{A} the p by K assignment matrix.
-#'   \item \code{C} the covariance matrix of the latent variables
-#'   \item \code{Omega} the precision of latent variables
-#'   \item \code{Gamma} the covariance matrix of the error
+#' @return A list of objects including: \itemize{
+#'   \item \code{K} The estimated number of clusters.
+#'   \item \code{pureVec} The estimated set of pure variables.
+#'   \item \code{pureInd} The estimated partition of pure variables.
+#'   \item \code{group} The estimated clusters (indices of each cluster).
+#'   \item \code{A} The estimated \eqn{p} by \eqn{K} assignment matrix.
+#'   \item \code{C} The covariance matrix of \eqn{Z}.
+#'   \item \code{Omega} The precision matrix of \eqn{Z}.
+#'   \item \code{Gamma} The diagonal of the covariance matrix of \eqn{E}.
+#'   \item \code{optDelta} The selected value from \code{delta}.
 #' }
 
 #' @examples
@@ -117,8 +121,6 @@ LOVE <- function(X, delta = seq(0.1, 1.1 ,0.1), lbd = 0.5, mu = 0.5, merge = FAL
     Y <- EstY(Sigma, A_hat, I_hat)
     threshold <- mu * optDelta * norm(Omega, "I")
 
-
-
     if (verbose) {
       cat("Estimating non-pure rows by", switch(est_non_pure_row, "HT" = "Hard Thresholding", "ST" = "Soft Thresholding", "Dantzig" = "Dantzig"), "...\n")
     }
@@ -133,12 +135,17 @@ LOVE <- function(X, delta = seq(0.1, 1.1 ,0.1), lbd = 0.5, mu = 0.5, merge = FAL
     } else
       cat("Unknown method of estimating the non-pure rows.\n")
 
-
     A_hat[-I_hat, ] <- AJ
     group <-recoverGroup(A_hat)
   }
-  return(list(K = ncol(A_hat), pureVec = I_hat, pureInd = resultAI$pureSignInd,
-              group = group, A = A_hat, C = C_hat, Omega = Omega, Gamma = Gamma_hat,
+  return(list(K = ncol(A_hat),
+              pureVec = I_hat,
+              pureInd = resultAI$pureSignInd,
+              group = group,
+              A = A_hat,
+              C = C_hat,
+              Omega = Omega,
+              Gamma = Gamma_hat,
               optDelta = delta[min(which(deltaGrids >= optDelta))]))
 }
 
