@@ -4,10 +4,14 @@
 \alias{solve_row}
 \title{Estimate each row by solving a LP}
 \usage{
-solve_row(col_ind, C, lbd)
+solve_row(col_ind, C_hat, lbd)
 }
 \arguments{
 \item{col_ind}{An integer.}
+
+\item{C_hat}{A \eqn{K} by \eqn{K} matrix.}
+
+\item{lbd}{A numeric constant.}
 }
 \value{
 A vector of length \eqn{K}.

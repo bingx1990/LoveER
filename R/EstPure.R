@@ -226,6 +226,7 @@ Merge_union <- function(groupList, groupVec) {
 #' pure variables.
 #'
 #' @param estGroupList A list of group indices of the pure variables.
+#' @param p An integer.
 #'
 #' @return A \eqn{p} by \eqn{K} matrix.
 

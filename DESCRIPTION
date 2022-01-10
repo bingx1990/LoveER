@@ -8,9 +8,10 @@ Description: This package mainly consists of two procedures: latent-model based
   overlapping clustering and essential regression. The former performs variable
   clustering under a structured latent factor model while the latter contains prediction, 
   estimation and inference under a structured latent factor regression model. 
-License: 'use_mit_license()'
+License: MIT License + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Imports: 
-    linprog
+    linprog,
+    MASS

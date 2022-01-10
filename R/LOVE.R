@@ -39,6 +39,7 @@
 #' data(toydata)
 #' output_table <- LOVE(X = toydata)
 #' @export
+#' @import stats
 
 
 

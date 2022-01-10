@@ -11,7 +11,7 @@ threshA(A, mu, scale = FALSE)
 
 \item{mu}{A numeric value.}
 
-\item{scake}{Logical. Normalize the row-wise \eqn{\ell-1} norm if TRUE.}
+\item{scale}{Logical. Normalize the row-wise \eqn{\ell-1} norm if TRUE.}
 }
 \value{
 A matrix with the same dimension as \code{A}.

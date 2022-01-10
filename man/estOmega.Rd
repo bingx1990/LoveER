@@ -7,9 +7,9 @@
 estOmega(lbd, C_hat)
 }
 \arguments{
-\item{C_hat}{A \eqn{K} by \eqn{K} matrix.}
+\item{lbd}{A numeric constant.}
 
-\item{A}{numeric constant.}
+\item{C_hat}{A \eqn{K} by \eqn{K} matrix.}
 }
 \value{
 A \eqn{K} by \eqn{K} matrix.

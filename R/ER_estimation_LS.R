@@ -21,7 +21,7 @@ ER_est_beta_LS  <- function(Y, X, Theta_hat, C_hat, Gamma_hat, I_hat, I_hat_part
 
   beta_est <- try(solve(crossprod(Theta_hat), t(Theta_hat) %*% crossprod(X, Y) / n), silent = T)
   if (class(beta_est)[1] == "try-error")
-    beta_est <- ginv(crossprod(Theta_hat)) %*%  t(Theta_hat) %*% crossprod(X, Y) / n
+    beta_est <- MASS::ginv(crossprod(Theta_hat)) %*%  t(Theta_hat) %*% crossprod(X, Y) / n
 
   sigma2_hat <- Est_sigma2(Y, t(BI) %*% crossprod(X[,I_hat], Y) / n, beta_est, C_hat)
   Omega_hat <- solve(C_hat)

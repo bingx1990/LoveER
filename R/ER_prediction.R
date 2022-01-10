@@ -22,7 +22,7 @@ ER_prediction <- function(Y, X, Theta_hat) {
   n <- nrow(X)
   Q <- try(Theta_hat %*% solve(crossprod(X %*% Theta_hat) / n, t(Theta_hat)), silent = T)
   if (class(Q)[1] == "try-error")
-    Q <- Theta_hat %*% ginv(crossprod(X %*% Theta_hat) / n) %*% t(Theta_hat)
+    Q <- Theta_hat %*% MASS::ginv(crossprod(X %*% Theta_hat) / n) %*% t(Theta_hat)
 
   theta_hat <- Q %*% crossprod(X, Y) / n
   fitted_val <- X %*% theta_hat
@@ -53,13 +53,13 @@ ER_prediction <- function(Y, X, Theta_hat) {
 # Pred_Z_BLP <- function(X, A_hat, C_hat, est_Gamma, S_beta) {
 #   est_Gamma_inv <- diag(est_Gamma ** (-1))
 #   G_hat <- crossprod(A_hat, est_Gamma_inv) %*% A_hat + solve(C_hat)
-#   Z_hat <- X %*% est_Gamma_inv %*% A_hat %*% ginv(G_hat)
+#   Z_hat <- X %*% est_Gamma_inv %*% A_hat %*% MASS::ginv(G_hat)
 #   Z_hat[,S_beta,drop = F]
 # }
 
 # Pred_Z_BLP_avg <- function(X, A_hat, C_hat, S_beta) {
 #   G_hat <- crossprod(A_hat) + solve(C_hat)
-#   Z_hat <- X %*% A_hat %*% ginv(G_hat)
+#   Z_hat <- X %*% A_hat %*% MASS::ginv(G_hat)
 #   Z_hat[,S_beta,drop = F]
 # }
 
@@ -68,7 +68,7 @@ ER_prediction <- function(Y, X, Theta_hat) {
 #   Z_hat <- X[ ,S] %*% B_hat
 #   eta_hat <- try(solve(crossprod(Z_hat), crossprod(Z_hat, Y)), silent = T)
 #   if (class(eta_hat) == "try-error")
-#     eta_hat <- ginv(crossprod(Z_hat)) %*% crossprod(Z_hat, Y)
+#     eta_hat <- MASS::ginv(crossprod(Z_hat)) %*% crossprod(Z_hat, Y)
 #   theta_hat <- B_hat %*% eta_hat
 #   return(list(pred = X[ ,S] %*% theta_hat, theta = theta_hat))
 # }

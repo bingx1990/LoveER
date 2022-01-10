@@ -8,14 +8,14 @@
 
 #' Estimate the precision matrix of \eqn{Z} via LP
 #'
-#' @param A numeric constant.
+#' @param lbd A numeric constant.
 #' @param C_hat A \eqn{K} by \eqn{K} matrix.
 #'
 #' @return A \eqn{K} by \eqn{K} matrix.
 
 estOmega <- function(lbd, C_hat) {
   # For a given lbd and C_hat, solve the C_hat^{-1}.
-  # Require: C should be symmetric and square.
+  # Require: C_hat should be symmetric and square.
   K <- nrow(C_hat)
   omega <- matrix(0, K, K)
   for (i in 1:K) {
@@ -32,12 +32,12 @@ estOmega <- function(lbd, C_hat) {
 #'
 #' @return A vector of length \eqn{K}.
 
-solve_row <- function(col_ind, C, lbd) {
-  K <- nrow(C)
+solve_row <- function(col_ind, C_hat, lbd) {
+  K <- nrow(C_hat)
   cvec <- c(1, rep(0, 2*K))
   Amat <- -cvec
   Amat <- rbind(Amat, c(-1, rep(1, 2*K)))
-  tmp_constr <- C %x% t(c(1,-1))
+  tmp_constr <- C_hat %x% t(c(1,-1))
   Amat <- rbind(Amat, cbind(-1 * lbd, rbind(tmp_constr, -tmp_constr)))
   tmp_vec <- rep(0, K)
   tmp_vec[col_ind] <- 1

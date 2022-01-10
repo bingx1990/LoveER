@@ -11,7 +11,7 @@ EstAJDant(C_hat, Y, lbd, se_est_J)
 
 \item{Y}{A \eqn{K} by \eqn{|J|} reponse matrix.}
 
-\item{lbd}{A tuning parameter for soft-thresholding.}
+\item{lbd}{A numeric constant.}
 
 \item{se_est_J}{The estimated standard errors of the non-pure variables.}
 }

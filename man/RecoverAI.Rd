@@ -9,6 +9,8 @@ RecoverAI(estGroupList, p)
 }
 \arguments{
 \item{estGroupList}{A list of group indices of the pure variables.}
+
+\item{p}{An integer.}
 }
 \value{
 A \eqn{p} by \eqn{K} matrix.

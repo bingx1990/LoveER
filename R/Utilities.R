@@ -41,7 +41,7 @@ singleton <- function(estPureIndices) {
 #'
 #' @inheritParams recoverGroup
 #' @param mu A numeric value.
-#' @param scake Logical. Normalize the row-wise \eqn{\ell-1} norm if TRUE.
+#' @param scale Logical. Normalize the row-wise \eqn{\ell-1} norm if TRUE.
 #'
 #' @return A matrix with the same dimension as \code{A}.
 

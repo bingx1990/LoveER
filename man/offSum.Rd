@@ -7,9 +7,9 @@
 offSum(M, weights)
 }
 \arguments{
-\item{M}{A given matrix with the same dimension as \code{weights}.}
+\item{M}{A given symmetric matrix}
 
-\item{weights}{A given weight matrix.}
+\item{weights}{A vector of length equal to the number of rows of \code{M}.}
 }
 \value{
 A numeric value.
