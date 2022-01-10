@@ -66,6 +66,6 @@ beta <- c(1, -0.5)
 Y <- Z \%*\% beta + eps
 
 res_LOVE <- LOVE(X)
-res_ER <- ER(Y, X, res_LOVE, CI = T)
+res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
 
 }
