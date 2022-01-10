@@ -124,8 +124,6 @@ ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
 #' @export
 
 Predict.ER <- function(fitted_ER, newX = NULL, type = "response") {
-  # newdata is a n by p matrix / array
-  # type is one of {"response", "factor"}
 
   if (is.null(newX)) {
     if (type == "response")
