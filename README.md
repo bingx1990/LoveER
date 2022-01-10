@@ -31,8 +31,8 @@ devtools::install_github("bingx1990/LoveER")
 
 ## Example
 
-This is a basic example which shows you how to use LoveER. We start by
-generating a data set.
+This is a basic example which shows you how to use two main functions of
+LoveER: LOVE and ER. We start by generating a synthetic data set.
 
 ``` r
 p <- 6
