@@ -120,7 +120,8 @@ ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
 #'   either \strong{Y} or \strong{Z} are returned, depending on \code{type}.
 #' @param type Either "response" or "factor". For "response", predicted values of
 #'   \eqn{Y} are returned. For "factor", predicted \eqn{Z} is returned.
-
+#'
+#' @export
 
 Predict.ER <- function(fitted_ER, newX = NULL, type = "response") {
   # newdata is a n by p matrix / array
