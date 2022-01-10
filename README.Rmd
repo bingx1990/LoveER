@@ -18,7 +18,15 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
+<<<<<<< HEAD
 LoveER provides algorithms with statistical guarantees to 
+=======
+<<<<<<< HEAD
+LoveER provides algorithms with statistical guarantees to 
+=======
+LoveER provides statistical guaranteed algorithms to 
+>>>>>>> 3d5abeff0b8ceb806e52568151a189d86104be5b
+>>>>>>> 7145375f569d74af6ce1697a236ad3b4bcd7862d
 
 * perform overlapping clustering of features under a structured latent factor model;
 * perform prediction, estimation and inference under a structured latent factor 
