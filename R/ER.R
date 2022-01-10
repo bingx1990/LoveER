@@ -56,7 +56,7 @@
 #' Y <- Z %*% beta + eps
 #'
 #' res_LOVE <- LOVE(X)
-#' res_ER <- ER(Y, X, res_LOVE, CI = T)
+#' res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
 #'
 #' @export
 

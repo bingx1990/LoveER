@@ -53,6 +53,19 @@ Under the Essential
  perform prediction of \eqn{Y}, estimation and inference of \eqn{\beta}.
 }
 \examples{
-data(toydata)
-output_table <- ER(X = toydata)
+p <- 6
+n <- 50
+K <- 2
+A <- rbind(c(1, 0), c(-1, 0), c(0, 1), c(0, 1), c(1/3, 2/3), c(1/2, -1/2))
+Z <- matrix(rnorm(n * K, sd = 2), n, K)
+E <- matrix(rnorm(n * p), n, p)
+X <- Z \%*\% t(A) + E
+
+eps <- rnorm(n)
+beta <- c(1, -0.5)
+Y <- Z \%*\% beta + eps
+
+res_LOVE <- LOVE(X)
+res_ER <- ER(Y, X, res_LOVE, CI = T)
+
 }
