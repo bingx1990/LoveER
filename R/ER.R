@@ -22,17 +22,17 @@
 #' @param Y A vector of response with length \eqn{n}.
 #' @param X A \eqn{n} by \eqn{p} data matrix.
 #' @param res_LOVE The returned object from \code{\link{LOVE}}.
-#' @param beta_est The procedure used for estimating beta. One of \{\code{NULL}, "LS", "Dantzig"\}
-#' @param mu,lbd The tuning parameter used for estimating beta via the Dantzig approach. The default value is 0.5.
+#' @param beta_est The procedure used for estimating \eqn{\beta}. One of \{\code{NULL}, "LS", "Dantzig"\}
+#' @param mu,lbd The tuning parameters used for estimating \eqn{\beta} via the Dantzig approach. The default value is 0.5.
 #' @param CI Logical. TRUE if confidence intervals are constructed.
 #' @param alpha_level The significance level. The default set to 0.05.
 #' @param correction The approach used for addressing the multiple testing problem.
 #'  Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".
 #
 #' @return A list of objects including: \itemize{
-#'   \item \code{beta} The estimated coefficients of \eqn{beta}.
-#'   \item \code{beta_CIs} The coordinate-wise confidence intervals of \eqn{beta}.
-#'   \item \code{beta_var} The variances of the estimated \eqn{beta}
+#'   \item \code{beta} The estimated coefficients of \eqn{\beta}.
+#'   \item \code{beta_CIs} The coordinate-wise confidence intervals of \eqn{\beta}.
+#'   \item \code{beta_var} The variances of the \code{beta}.
 #'   \item \code{coef_X} The estimated p-dimensional coefficient between \eqn{Y} and \eqn{X}.
 #'   \item \code{mat_trans_to_Z} The \eqn{p} by \eqn{K} matrix used to predict \eqn{Z}.
 #'   \item \code{fitted_val} The fitted values of length \eqn{n}.
@@ -97,7 +97,10 @@ ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
 
 
 
-#' Predict under Essential Regression
+
+#' Prediction under Essential Regression
+#'
+#' Predict either the response or the latent factors under Essential Regression.
 #'
 #' @param fitted_ER The object returned from \code{\link{ER}}.
 #' @param newX A new data matrix of \eqn{X}. If not provided, the fitted values of

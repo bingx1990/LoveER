@@ -2,7 +2,7 @@
 % Please edit documentation in R/ER_prediction.R
 \name{ER_prediction}
 \alias{ER_prediction}
-\title{}
+\title{Estimation for prediction under Essential Regression}
 \usage{
 ER_prediction(Y, X, Theta_hat)
 }
@@ -22,5 +22,6 @@ A list including: \itemize{
 }
 }
 \description{
-
+Estimate the p-dimensional coefficient between \eqn{Y} and \eqn{X}
+  and the \eqn{p} by \eqn{K} matrix to predict \eqn{Z}.
 }

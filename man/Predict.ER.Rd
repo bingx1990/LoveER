@@ -2,7 +2,7 @@
 % Please edit documentation in R/ER.R
 \name{Predict.ER}
 \alias{Predict.ER}
-\title{Predict under Essential Regression}
+\title{Prediction under Essential Regression}
 \usage{
 Predict.ER(fitted_ER, newX = NULL, type = "response")
 }
@@ -16,5 +16,5 @@ either \strong{Y} or \strong{Z} are returned, depending on \code{type}.}
 \eqn{Y} are returned. For "factor", predicted \eqn{Z} is returned.}
 }
 \description{
-Predict under Essential Regression
+Predict either the response or the latent factors under Essential Regression.
 }

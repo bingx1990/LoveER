@@ -1,20 +1,19 @@
 #################################################################################
 #####                                                                       #####
-##### This is the code for Step 2: regression to estimate the non-pure rows #####
+#####      Functions related to the estimation of non-pure rows of A        #####
 #####                                                                       #####
 #################################################################################
 
 
+#' Estimate the covariance matrix of \eqn{Z}.
+#'
+#' @inheritParams EstAI
+#' @param AI A \eqn{p} by \eqn{K} matrix.
+#' @inheritParams LOVE
+#'
+#' @return A \eqn{K} by \eqn{K} matrix.
+
 EstC <- function(Sigma, AI, diagonal) {
-  # Estimate C. If diagonal=True, estimate only diagonal elements.
-  #
-  # Args:
-  #   Sigma: p by p covariance matrix.
-  #   AI: p by K matrix.
-  #   diagonal: TRUE or FALSE.
-  #
-  # Returns:
-  #   K by K estimated C_hat
   K <- ncol(AI)
   C <- diag(0, K, K)
   for (i in 1:K) {
@@ -35,54 +34,33 @@ EstC <- function(Sigma, AI, diagonal) {
   return(C)
 }
 
+
+
+#' Function to estimate the \eqn{K} by \eqn{|J|} submatrix of \eqn{\Sigma}.
+#'
+#' @inheritParams EstC
+#' @param pureVec The estimated set of pure variables.
+#'
+#' @return A \eqn{K} by \eqn{|J|} matrix.
+
 EstY <- function(Sigma, AI, pureVec) {
-  # Estimate the Sigma_{TJ}_hat
-  #
-  # Args:
-  #   Sigma: p by p matrix.
-  #   AI: p by K matrix.
-  #   pureVec: the vector of pure node indices.
-  #
-  # Returns:
-  #   Sigma_{TJ}_hat: K by |J| matrix.
-  SigmaS <- AdjustSign(Sigma, AI)
-  SigmaJ <- matrix(SigmaS[ ,-pureVec], nrow = nrow(Sigma))
-  SigmaTJ <- matrix(0, ncol(AI), nrow(AI) - length(pureVec))
-  for (i in 1:ncol(AI)) {
-    groupi <- which(AI[ ,i] != 0)
-    SigmaiJ <- as.matrix(SigmaJ[groupi, ])
-    SigmaTJ[i, ] <- apply(SigmaiJ, 2, mean) # Average columns along the rows.
-  }
-  return(SigmaTJ)
+   AI_sub <- AI[pureVec,,drop = F]
+   return(solve(crossprod(AI_sub), t(AI_sub) %*% Sigma[pureVec, -pureVec, drop = F]))
 }
 
-AdjustSign <- function(Sigma, AI) {
-  # Sign operation on matrix {@code Sigma} according to the sign of {@code AI}
-  #
-  # Args:
-  #   Sigma: p by p matrix; AI: p by K matrix
-  #
-  # Returns:
-  #   p by p matrix
-  SigmaS <- matrix(0, nrow(AI), nrow(AI))
-  for (i in 1:nrow(AI)) {
-    index <- which(AI[i, ] != 0)
-    if (length(index) != 0)
-      SigmaS[i, ] = sign(AI[i,index]) * Sigma[i, ]
-  }
-  return(SigmaS)
-}
+
+
+#' Estimates non-pure rows via soft-thresholding
+#'
+#' This function estimates the \eqn{|J|} by \eqn{K} submatrix \eqn{A_J} by using soft thresholding.
+#'
+#' @param Omega The estimated precision matrix of \eqn{Z}.
+#' @param Y A \eqn{K} by \eqn{|J|} reponse matrix.
+#' @param lbd A tuning parameter for soft-thresholding.
+#'
+#' @return A \eqn{|J|} by \eqn{K} matrix.
 
 EstAJInv <- function(Omega, Y, lbd) {
-  # This function estimates the |J| by K matrix A_J by using soft thresholding.
-  #
-  # Args:
-  #   Omega: K by K estimated C^{-1}.
-  #   Y: K by |J| reponse matrix.
-  #   lbd: the chosen constant of the RHS constraint for soft-thresholding.
-  #
-  # Returns:
-  #   |J| by K matrix A_J.
   AJ <- matrix(0, ncol(Y), nrow(Y))
   for (i in 1:ncol(Y)) {
     Atilde <- Omega %*% as.matrix(Y[ ,i])
@@ -94,18 +72,18 @@ EstAJInv <- function(Omega, Y, lbd) {
 }
 
 
+
+#' Cast the procedure as a linear program
+#   beta^+ - beta^- \leq lbd + y
+#   - beta^+ + beta^- \leq lbd - y
+#   beta^+ \ge 0; beta^- \ge 0
+#
+#' @param y A vector of length \eqn{K}.
+#' @inheritParams EstAJInv
+#'
+#' @return A vector of length \eqn{K}.
+
 LP <- function(y, lbd) {
-  # Use LP to solve problem:
-  #   beta^+ - beta^- \leq lbd + y
-  #   - beta^+ + beta^- \leq lbd - y
-  #   beta^+ \ge 0; beta^- \ge 0
-  #
-  # Args:
-  #   y: K by 1 vector.
-  #   lbd: positive contant.
-  #
-  # Returns:
-  #   K by 1 vector
   K <- length(y)
   cvec <- rep(1, 2 * K)
   bvec <- c(lbd + y, lbd - y, rep(0, 2 * K))
@@ -120,16 +98,33 @@ LP <- function(y, lbd) {
   return(beta)
 }
 
-EstAJDant <- function(C_hat, Y_hat, lbd, se_est_J) {
-  AJ <- matrix(0, ncol(Y_hat), nrow(Y_hat))
-  for (i in 1:ncol(Y_hat)) {
-    AJ[i, ] <- Dantzig(C_hat, Y_hat[,i], lbd * se_est_J[i])
+
+#' Estimate the non-pure rows via the Dantzig approach
+#'
+#' @inheritParams estOmega
+#' @inheritParams EstAJInv
+#' @param se_est_J The estimated standard errors of the non-pure variables.
+#'
+#' @return A \eqn{|J|} by \eqn{K} matrix.
+
+EstAJDant <- function(C_hat, Y, lbd, se_est_J) {
+  AJ <- matrix(0, ncol(Y), nrow(Y))
+  for (i in 1:ncol(Y)) {
+    AJ[i, ] <- Dantzig(C_hat, Y[,i], lbd * se_est_J[i])
     if (sum(abs(AJ[i, ])) > 1)
       AJ[i,] <- AJ[i,] / sum(abs(AJ[i, ]))
     # cat("Finishing estimating the", i, "th row...\n")
   }
   return(AJ)
 }
+
+
+#' The Dantzig approach of solving one non-pure row
+#'
+#' @inheritParams LP
+#' @inheritParams EstAJDant
+#'
+#' @return A vector of length \eqn{K}.
 
 Dantzig <- function(C_hat, y, lbd) {
   K <- length(y)
@@ -146,6 +141,33 @@ Dantzig <- function(C_hat, y, lbd) {
 }
 
 
+
+
+
+
+
+# EstY <- function(Sigma, AI, pureVec) {
+#   SigmaS <- AdjustSign(Sigma, AI)
+#   SigmaJ <- matrix(SigmaS[ ,-pureVec], nrow = nrow(Sigma))
+#   SigmaTJ <- matrix(0, ncol(AI), nrow(AI) - length(pureVec))
+#   for (i in 1:ncol(AI)) {
+#     groupi <- which(AI[ ,i] != 0)
+#     SigmaiJ <- as.matrix(SigmaJ[groupi, ])
+#     SigmaTJ[i, ] <- apply(SigmaiJ, 2, mean) # Average columns along the rows.
+#   }
+#   return(SigmaTJ)
+# }
+
+
+# AdjustSign <- function(Sigma, AI) {
+#   SigmaS <- matrix(0, nrow(AI), nrow(AI))
+#   for (i in 1:nrow(AI)) {
+#     index <- which(AI[i, ] != 0)
+#     if (length(index) != 0)
+#       SigmaS[i, ] = sign(AI[i,index]) * Sigma[i, ]
+#   }
+#   return(SigmaS)
+# }
 
 
 

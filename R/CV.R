@@ -1,19 +1,21 @@
-##### Parameter tuning and Cross validation ######
+##### Functions to select tuning parameters via cross validation
 # source("Utilities.R")
 
+
+#' @title Cross validation to select \eqn{\delta}
+#'
+#' @description Cross validation for choosing the tuning parameter \eqn{\delta}.
+#'   For each value of \code{deltaGrids}, first split the data into two parts and
+#'   calculate \eqn{I}, \eqn{A_I} and \eqn{Cov(Z)}. Then calculate the fit \eqn{A_I Cov(Z) A_I'}
+#'   to find the value which minimizes the loss criterion \deqn{||\Sigma - A_I Cov(Z) A_I'||_{F-off}/(|I|(|I|-1))}.
+#'
+#' @inheritParams LOVE
+#' @inheritParams EstAI
+#' @param deltaGrids A vector of numerical constants.
+#'
+#' @return A numeric constant. The selected optimal \eqn{\delta}.
+
 CV_Delta <- function(X, deltaGrids, diagonal, se_est, merge) {
-  # Cross validation for choosing delta. For each delta from the given grids,
-  # first split the data into two datasets. Obtain I, AI and C. Then calculate
-  # AICAI^T and choose delta which minimizes the criterion
-  #                   A_I C A_I' - Sigma(dataset 2)
-  #
-  # Args:
-  #   X: n by p matrix.
-  #   deltaGrids: vector of numerical constants.
-  #   diagonal: TRUE or FALSE for the diagonal structure of C.
-  #
-  # Returns:
-  #   the selected optimal delta
   n <- nrow(X); p <- ncol(X)
   sampInd <- sample(n, floor(n / 2))
   X1 <- X[sampInd, ]
@@ -37,7 +39,7 @@ CV_Delta <- function(X, deltaGrids, diagonal, se_est, merge) {
     else {
       denom <- length(estPureVec) * (length(estPureVec) - 1)
       # loss[i] <- 2 * offSum(Sigma2[estPureVec, estPureVec], fittedValue, 1) / denom
-      loss[i] <- 2 * offSum(Sigma2[estPureVec, estPureVec], fittedValue, se_est[estPureVec]) / denom
+      loss[i] <- 2 * offSum(Sigma2[estPureVec, estPureVec] - fittedValue, se_est[estPureVec]) / denom
     }
   }
   # cat(loss)
@@ -45,19 +47,20 @@ CV_Delta <- function(X, deltaGrids, diagonal, se_est, merge) {
 }
 
 
+
+
+#' Calculate the fitted value \eqn{A_I Cov(Z) A_I'}.
+#'
+#' @inheritParams LOVE
+#' @inheritParams EstAI
+#' @inheritParams FindPureNode
+#'
+#' @return A list including: \itemize{
+#'    \item \code{pureVec} A vector of the indices of the estimated pure variables.
+#'    \item \code{fitted} The fitted value \eqn{A_I Cov(Z) A_I'}.
+#' }
+
 CalFittedSigma <- function(Sigma, delta, Ms, arg_Ms, se_est, diagonal, merge) {
-  # Calculate the fitted value of A_ICA_I^T for given Sigma and delta.
-  #
-  # Args:
-  #   Sigma: p by p covariance matrix.
-  #   delta: given parameter.
-  #   Ms: the calculated maximal values of Sigma per row.
-  #   diagonal: TRUE or FALSE.
-  #
-  # Returns:
-  #   a list including:
-  #     pureVec: vector of the indices of estimated pure variables.
-  #     fitted: fitted value of A_ICA_I^T
   resultPureNode <- FindPureNode(abs(Sigma), delta, Ms, arg_Ms, se_est, merge)
 
   estPureIndices <- resultPureNode$pureInd
@@ -80,22 +83,23 @@ CalFittedSigma <- function(Sigma, delta, Ms, arg_Ms, se_est, diagonal, merge) {
 }
 
 
+
+#' @title Cross validation to select \eqn{\lambda}
+#'
+#' @description Cross-validation to select \eqn{\lambda} for estimating the precision
+#'   matrix of \eqn{Z}. Split the data into two parts. Estimating \eqn{Cov(Z)} on two datasets.
+#'   Then, for each value in \code{lbdGrids}, calculate \eqn{Omega} on the first dataset
+#'   and calculate the loss on the second dataset. Choose the value which minimizes
+#'    \deqn{<Cov(Z), \Omega> - log(det(\Omega)).}
+#'
+#' @inheritParams LOVE
+#' @inheritParams EstY
+#' @inheritParams EstC
+#' @param lbdGrids A vector of numerical constants.
+#'
+#' @return The selected \eqn{\lambda}.
+
 CV_lbd <- function(X, lbdGrids, AI, pureVec, diagonal) {
-  # Use Cross-validation to select lambda for estimating Omega. Split the data
-  # into two parts. Estimating C on two datasets. Then, for each lambda, calcu-
-  # late Omega on the first dataset and calculate the loss on the second dataset.
-  # Find the lambda which gives the smallest loss of
-  #                 <C,Omega> - log(det(Omega))
-  #
-  # Args:
-  #   X: n by p matrix.
-  #   lbdGrids: vector of numerical constants.
-  #   AI: p by K matrix.
-  #   pureVec: vector of indices of pure variables.
-  #   diagonal: TRUE or FALSE for the diagonal structure of C.
-  #
-  # Returns:
-  #   the selected optimal lambda
   sampInd <- sample(nrow(X), floor(nrow(X) / 2))
   X1 <- X[sampInd, ]
   X2 <- X[-sampInd, ]

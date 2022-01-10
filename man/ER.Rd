@@ -23,9 +23,9 @@ ER(
 
 \item{res_LOVE}{The returned object from \code{\link{LOVE}}.}
 
-\item{beta_est}{The procedure used for estimating beta. One of \{\code{NULL}, "LS", "Dantzig"\}}
+\item{beta_est}{The procedure used for estimating \eqn{\beta}. One of \{\code{NULL}, "LS", "Dantzig"\}}
 
-\item{mu, lbd}{The tuning parameter used for estimating beta via the Dantzig approach. The default value is 0.5.}
+\item{mu, lbd}{The tuning parameters used for estimating \eqn{\beta} via the Dantzig approach. The default value is 0.5.}
 
 \item{CI}{Logical. TRUE if confidence intervals are constructed.}
 
@@ -36,9 +36,9 @@ Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".}
 }
 \value{
 A list of objects including: \itemize{
-  \item \code{beta} The estimated coefficients of \eqn{beta}.
-  \item \code{beta_CIs} The coordinate-wise confidence intervals of \eqn{beta}.
-  \item \code{beta_var} The variances of the estimated \eqn{beta}
+  \item \code{beta} The estimated coefficients of \eqn{\beta}.
+  \item \code{beta_CIs} The coordinate-wise confidence intervals of \eqn{\beta}.
+  \item \code{beta_var} The variances of the \code{beta}.
   \item \code{coef_X} The estimated p-dimensional coefficient between \eqn{Y} and \eqn{X}.
   \item \code{mat_trans_to_Z} The \eqn{p} by \eqn{K} matrix used to predict \eqn{Z}.
   \item \code{fitted_val} The fitted values of length \eqn{n}.

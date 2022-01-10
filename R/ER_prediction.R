@@ -2,7 +2,11 @@
 ####          Estimation of the coefficients for prediction       ######
 ########################################################################
 
-#' @title
+
+#' @title Estimation for prediction under Essential Regression
+#'
+#' @description Estimate the p-dimensional coefficient between \eqn{Y} and \eqn{X}
+#'   and the \eqn{p} by \eqn{K} matrix to predict \eqn{Z}.
 #'
 #' @inheritParams ER
 #' @param Theta_hat A \eqn{p} by \eqn{K} matrix.

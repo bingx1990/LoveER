@@ -1,9 +1,36 @@
 ################################################################################
 ######                                                                   #######
-######   These are the code which convert the original problem into LP   #######
+######     Code to estimate the precision matrix of Z via solving LPs    #######
 ######                                                                   #######
 ################################################################################
 # library(linprog)
+
+
+#' Estimate the precision matrix of \eqn{Z} via LP
+#'
+#' @param A numeric constant.
+#' @param C_hat A \eqn{K} by \eqn{K} matrix.
+#'
+#' @return A \eqn{K} by \eqn{K} matrix.
+
+estOmega <- function(lbd, C_hat) {
+  # For a given lbd and C_hat, solve the C_hat^{-1}.
+  # Require: C should be symmetric and square.
+  K <- nrow(C_hat)
+  omega <- matrix(0, K, K)
+  for (i in 1:K) {
+    omega[,i] <- solve_row(i, C_hat, lbd)
+  }
+  return(omega)
+}
+
+
+#' Estimate each row by solving a LP
+#'
+#' @param col_ind An integer.
+#' @inheritParams estOmega
+#'
+#' @return A vector of length \eqn{K}.
 
 solve_row <- function(col_ind, C, lbd) {
   K <- nrow(C)
@@ -27,14 +54,5 @@ solve_row <- function(col_ind, C, lbd) {
   return(lpResult[ind] - lpResult[ind + 1])
 }
 
-estOmega <- function(lbd, C) {
-  # For a given lbd and C, solve the C^{-1}.
-  # Require: C should be symmetric and square.
-  K <- nrow(C)
-  omega <- matrix(0, K, K)
-  for (i in 1:K) {
-    omega[,i] <- solve_row(i, C, lbd)
-  }
-  return(omega)
-}
+
 

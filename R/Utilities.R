@@ -1,44 +1,12 @@
-######### This script contains some utilities function to test the performance ########
+#####      This script contains some helper functions
 
-checkElement <- function(element, groupList) {
-  # Check if an element is in a list. If it does exist in some group, return the group
-  # index in that list and its sublist index. Otherwise, return c(0,0).
-  for (i in 1:length(groupList)) {
-    for (j in 1:length(groupList[[i]])) {
-      if (element %in% groupList[[i]][[j]])
-        return(c(i,j))
-    }
-  }
-  return(c(0,0))
-}
-
-
-pureRowInd <- function(A) {
-  # For given matrix A, find the row indices which correspond to pure nodes
-  #
-  # Args:
-  #   A: p by K matrix.
-  #
-  # Returns:
-  #   vector of pure row indices
-  pureVec <- c()
-  for (i in 1:ncol(A)) {
-    pureVec <- c(pureVec, which(abs(A[ ,i]) == 1))
-  }
-  return(pureVec)
-}
-
-
+#' Recover clusters based on a given \eqn{p} by \eqn{K} loading matrix.
+#'
+#' @param A A \eqn{p} by \eqn{K} matrix.
+#'
+#' @return A list of group indices with sign sub-partition.
 
 recoverGroup <- function(A) {
-  # Recover group structure based given p by K matrix A and perform thresholding
-  #
-  # Args:
-  #   A: estimated matrix.
-  #   thresh: constant > 0.
-  #
-  # Returns:
-  #   list of group indices with sign subpartition
   Group <- list()
   for (i in 1:ncol(A)) {
     column <- A[,i]
@@ -49,9 +17,15 @@ recoverGroup <- function(A) {
   return(Group)
 }
 
+
+#' Function to check if there exists any element in the given list that has length
+#' equal to 1
+#'
+#' @param estPureIndices A list of indices of the estimated pure variables.
+#'
+#' @return Logical. If exists at least one, return TRUE; otherwise return FALSE
+
 singleton <- function(estPureIndices) {
-  # Check if there exists an element of the given list has length equal to 1
-  # If exists at least one, return TRUE; otherwise return FALSE
   if (length(estPureIndices) == 0)
     return(T)
   else
@@ -59,9 +33,19 @@ singleton <- function(estPureIndices) {
 }
 
 
+#' @title Function to hard-threshold
+#'
+#' @description Threshold the estimated \code{A} based on the given \code{mu}.
+#'   If \code{scale} is TRUE, then normalize each row of \code{A} such that the
+#'   \eqn{\ell-1} norm of each row is no larger than 1.
+#'
+#' @inheritParams recoverGroup
+#' @param mu A numeric value.
+#' @param scake Logical. Normalize the row-wise \eqn{\ell-1} norm if TRUE.
+#'
+#' @return A matrix with the same dimension as \code{A}.
+
 threshA <- function(A, mu, scale = FALSE) {
-  # Threshold the estimated {@code A} based on the given {@code mu}. If {@code scale} is true,
-  # then normalize each row of A such that the l-1 norm of each row is not larger than 1.
   scaledA <- A
   for (i in 1:nrow(A)) {
     colInd <- abs(A[i, ]) <= mu
@@ -72,14 +56,51 @@ threshA <- function(A, mu, scale = FALSE) {
   return(scaledA)
 }
 
-offSum <- function(M, N, weights) {
-  # Calculate the sum of squares of the upper off-diagonal elements of two matrices
-  # require: M and N have the same dimensions
-  tmp <- (M-N) / weights
+
+
+#' Calculate the weighted sum of squares of the upper off-diagonal elements
+#'
+#' @param M A given symmetric matrix
+#' @param weights A vector of length equal to the number of rows of \code{M}.
+#'
+#' @return A numeric value.
+
+offSum <- function(M, weights) {
+  tmp <- M / weights
   tmp <- t(t(tmp) / weights)
   return(sum((tmp[row(tmp) <= (col(tmp) - 1)])^2))
 }
 
+
+
+
+# checkElement <- function(element, groupList) {
+#   # Check if an element is in a list. If it does exist in some group, return the group
+#   # index in that list and its sublist index. Otherwise, return c(0,0).
+#   for (i in 1:length(groupList)) {
+#     for (j in 1:length(groupList[[i]])) {
+#       if (element %in% groupList[[i]][[j]])
+#         return(c(i,j))
+#     }
+#   }
+#   return(c(0,0))
+# }
+
+
+# pureRowInd <- function(A) {
+#   # For given matrix A, find the row indices which correspond to pure nodes
+#   #
+#   # Args:
+#   #   A: p by K matrix.
+#   #
+#   # Returns:
+#   #   vector of pure row indices
+#   pureVec <- c()
+#   for (i in 1:ncol(A)) {
+#     pureVec <- c(pureVec, which(abs(A[ ,i]) == 1))
+#   }
+#   return(pureVec)
+# }
 
 
 
