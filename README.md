@@ -6,10 +6,12 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-LoveER provides statistical guaranteed algorithms to \* perform
-overlapping clustering of features under a structured latent factor
-model; \* perform prediction, estimation and inference under a
-structured latent factor regression model.
+LoveER provides statistical guaranteed algorithms to
+
+-   perform overlapping clustering of features under a structured latent
+    factor model;
+-   perform prediction, estimation and inference under a structured
+    latent factor regression model.
 
 ## Installation
 
