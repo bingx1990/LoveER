@@ -19,7 +19,10 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 LoveER provides statistical guaranteed algorithms to 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 92fc0f3d61bae4b540800a0702fb5ef76f47b593
 * perform overlapping clustering of features under a structured latent factor model;
 * perform prediction, estimation and inference under a structured latent factor 
   regression model.
@@ -43,7 +46,11 @@ devtools::install_github("bingx1990/LoveER")
 This is a basic example which shows you how to use LoveER. We start by generating 
 a data set. 
 
+<<<<<<< HEAD
 ```{r data generating}
+=======
+```{r data generating, echo = FALSE}
+>>>>>>> 92fc0f3d61bae4b540800a0702fb5ef76f47b593
 p <- 6
 n <- 50
 K <- 2
@@ -61,16 +68,26 @@ The following code calls the LOVE function to perform overlapping clustering of
 the columns of the \strong{X} matrix.
 
 ```{r example-LOVE}
+<<<<<<< HEAD
 # library(LoveER)
 ## basic example code
 # res_LOVE <- LOVE(X)
+=======
+library(LoveER)
+## basic example code
+res_LOVE <- LOVE(X)
+>>>>>>> 92fc0f3d61bae4b540800a0702fb5ef76f47b593
 ```
 
 To predict \eqn{Y}, estimate the coefficient \eqn{\beta} and provide confidence
 intervals of \eqn{\beta}, the following code provides an example.
 
 ```{r example-ER}
+<<<<<<< HEAD
 # res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
+=======
+res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
+>>>>>>> 92fc0f3d61bae4b540800a0702fb5ef76f47b593
 ```
 
 
