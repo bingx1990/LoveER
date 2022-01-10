@@ -61,16 +61,16 @@ The following code calls the LOVE function to perform overlapping clustering of
 the columns of the \strong{X} matrix.
 
 ```{r example-LOVE}
-# library(LoveER)
-## basic example code
-# res_LOVE <- LOVE(X)
+library(LoveER)
+# basic example code
+res_LOVE <- LOVE(X)
 ```
 
 To predict \eqn{Y}, estimate the coefficient \eqn{\beta} and provide confidence
 intervals of \eqn{\beta}, the following code provides an example.
 
 ```{r example-ER}
-# res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
+res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
 ```
 
 
