@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 LoveER provides statistical guaranteed algorithms to 
+
 * perform overlapping clustering of features under a structured latent factor model;
 * perform prediction, estimation and inference under a structured latent factor 
   regression model.
@@ -42,7 +43,7 @@ devtools::install_github("bingx1990/LoveER")
 This is a basic example which shows you how to use LoveER. We start by generating 
 a data set. 
 
-```{r data generating, echo = FALSE}
+```{r data generating}
 p <- 6
 n <- 50
 K <- 2

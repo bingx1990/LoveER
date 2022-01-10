@@ -34,6 +34,20 @@ devtools::install_github("bingx1990/LoveER")
 This is a basic example which shows you how to use LoveER. We start by
 generating a data set.
 
+``` r
+p <- 6
+n <- 50
+K <- 2
+A <- rbind(c(1, 0), c(-1, 0), c(0, 1), c(0, 1), c(1/3, 2/3), c(1/2, -1/2))
+Z <- matrix(rnorm(n * K, sd = 2), n, K)
+E <- matrix(rnorm(n * p), n, p)
+X <- Z %*% t(A) + E
+
+eps <- rnorm(n)
+beta <- c(1, -0.5)
+Y <- Z %*% beta + eps
+```
+
 The following code calls the LOVE function to perform overlapping
 clustering of the columns of the matrix.
 
