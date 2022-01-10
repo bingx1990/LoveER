@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-LoveER provides statistical guaranteed algorithms to
+LoveER provides algorithms with statistical guarantees to
 
 -   perform overlapping clustering of features under a structured latent
     factor model;
