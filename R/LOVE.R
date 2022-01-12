@@ -100,7 +100,7 @@ LOVE <- function(X, delta = seq(0.1, 1.1 ,0.1), lbd = 0.5, mu = 0.5, merge = FAL
 
   C_hat <- EstC(Sigma, A_hat, diagonal)
 
-  # Estimate the covariance matrix of the error
+  # Estimate the covariance matrix of the error corresponding to non-pure variables
   Gamma_hat <- rep(0, p)
   Gamma_hat[I_hat] <- diag(Sigma[I_hat, I_hat]) - diag(A_hat[I_hat,] %*% C_hat %*% t(A_hat[I_hat,]))
   Gamma_hat[Gamma_hat < 0] <- 0
