@@ -44,7 +44,6 @@ singleton <- function(estPureIndices) {
 #' @param scale Logical. Normalize the row-wise \eqn{\ell-1} norm if TRUE.
 #'
 #' @return A matrix with the same dimension as \code{A}.
-#' @noRd
 
 threshA <- function(A, mu, scale = FALSE) {
   scaledA <- A
