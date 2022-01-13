@@ -87,12 +87,15 @@ ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
     beta_CIs <- res_beta$CIs
     beta_var <- res_beta$beta_var
   }
-  return(list(beta = beta_hat, beta_CIs = beta_CIs, beta_var = beta_var,
+  return(list(beta = beta_hat,
+              beta_CIs = beta_CIs,
+              beta_var = beta_var,
               coef_X = pred_result$theta,
               mat_trans_to_Z = pred_result$mat_trans_to_Z,
               fitted_val = pred_result$fitted_val,
               Z_pred = pred_result$Z_pred,
-              X_center = attr(X, "scaled:center"), Y_center = Y_center))
+              X_center = attr(X, "scaled:center"),
+              Y_center = Y_center))
 }
 
 
