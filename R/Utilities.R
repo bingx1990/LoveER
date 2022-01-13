@@ -5,6 +5,7 @@
 #' @param A A \eqn{p} by \eqn{K} matrix.
 #'
 #' @return A list of group indices with sign sub-partition.
+#' @noRd
 
 recoverGroup <- function(A) {
   Group <- list()
@@ -24,6 +25,7 @@ recoverGroup <- function(A) {
 #' @param estPureIndices A list of indices of the estimated pure variables.
 #'
 #' @return Logical. If exists at least one, return TRUE; otherwise return FALSE
+#' @noRd
 
 singleton <- function(estPureIndices) {
   if (length(estPureIndices) == 0)
@@ -65,6 +67,7 @@ threshA <- function(A, mu, scale = FALSE) {
 #' @param weights A vector of length equal to the number of rows of \code{M}.
 #'
 #' @return A numeric value.
+#' @noRd
 
 offSum <- function(M, weights) {
   tmp <- M / weights
@@ -73,35 +76,6 @@ offSum <- function(M, weights) {
 }
 
 
-
-
-# checkElement <- function(element, groupList) {
-#   # Check if an element is in a list. If it does exist in some group, return the group
-#   # index in that list and its sublist index. Otherwise, return c(0,0).
-#   for (i in 1:length(groupList)) {
-#     for (j in 1:length(groupList[[i]])) {
-#       if (element %in% groupList[[i]][[j]])
-#         return(c(i,j))
-#     }
-#   }
-#   return(c(0,0))
-# }
-
-
-# pureRowInd <- function(A) {
-#   # For given matrix A, find the row indices which correspond to pure nodes
-#   #
-#   # Args:
-#   #   A: p by K matrix.
-#   #
-#   # Returns:
-#   #   vector of pure row indices
-#   pureVec <- c()
-#   for (i in 1:ncol(A)) {
-#     pureVec <- c(pureVec, which(abs(A[ ,i]) == 1))
-#   }
-#   return(pureVec)
-# }
 
 
 

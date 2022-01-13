@@ -1,17 +1,6 @@
 ########################################################################
 ########                  Essential Regression                ##########
 ########################################################################
-# source("CV.R")
-# source("Utilities.R")
-# source("EstNonpure.R")
-# source("EstPure.R")
-# source("EstOmega.R")
-# source("ER_estimation_Dz.R")
-# source("ER_estimation_LS.R")
-# source("LOVE.R")
-# source("ER_prediction.R")
-# library(linprog)
-
 
 #' @title Essential Regression
 #'
@@ -40,8 +29,7 @@
 #'   \item \code{X_center} Centers of the input \code{X}.
 #'   \item \code{Y_center} Center of the input \code{Y}.
 #' }
-
-
+#'
 #' @examples
 #' p <- 6
 #' n <- 50

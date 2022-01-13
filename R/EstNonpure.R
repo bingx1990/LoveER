@@ -5,43 +5,13 @@
 #################################################################################
 
 
-#' Estimate the covariance matrix of \eqn{Z}.
-#'
-#' @inheritParams EstAI
-#' @param AI A \eqn{p} by \eqn{K} matrix.
-#' @inheritParams LOVE
-#'
-#' @return A \eqn{K} by \eqn{K} matrix.
-
-EstC <- function(Sigma, AI, diagonal) {
-  K <- ncol(AI)
-  C <- diag(0, K, K)
-  for (i in 1:K) {
-    groupi <- which(AI[ ,i] != 0)
-    sigmai <- as.matrix(abs(Sigma[groupi,groupi]))
-    tmpEntry <- sum(sigmai) - sum(diag(sigmai))
-    C[i,i] <- tmpEntry / (length(groupi) * (length(groupi) - 1))
-    if (!diagonal && i < K) {
-      for (j in (i+1):K) {
-        groupj <- which(AI[ ,j]!=0)
-        # adjust the sign for each row
-        sigmaij <- AI[groupi,i] * as.matrix(Sigma[groupi, groupj])
-        sigmaij <- t(AI[groupj, j] * t(sigmaij))
-        C[i,j] <- C[j,i] <- sum(sigmaij) / (length(groupi) * length(groupj))
-      }
-    }
-  }
-  return(C)
-}
-
-
-
 #' Function to estimate the \eqn{K} by \eqn{|J|} submatrix of \eqn{\Sigma}.
 #'
 #' @inheritParams EstC
-#' @param pureVec The estimated set of pure variables.
+#' @inheritParams CV_lbd
 #'
 #' @return A \eqn{K} by \eqn{|J|} matrix.
+#' @noRd
 
 EstY <- function(Sigma, AI, pureVec) {
    AI_sub <- AI[pureVec,,drop = F]
@@ -59,6 +29,7 @@ EstY <- function(Sigma, AI, pureVec) {
 #' @param lbd A tuning parameter for soft-thresholding.
 #'
 #' @return A \eqn{|J|} by \eqn{K} matrix.
+#' @noRd
 
 EstAJInv <- function(Omega, Y, lbd) {
   AJ <- matrix(0, ncol(Y), nrow(Y))
@@ -82,6 +53,7 @@ EstAJInv <- function(Omega, Y, lbd) {
 #' @inheritParams EstAJInv
 #'
 #' @return A vector of length \eqn{K}.
+#' @noRd
 
 LP <- function(y, lbd) {
   K <- length(y)
@@ -106,6 +78,7 @@ LP <- function(y, lbd) {
 #' @param se_est_J The estimated standard errors of the non-pure variables.
 #'
 #' @return A \eqn{|J|} by \eqn{K} matrix.
+#' @noRd
 
 EstAJDant <- function(C_hat, Y, lbd, se_est_J) {
   AJ <- matrix(0, ncol(Y), nrow(Y))
@@ -125,6 +98,7 @@ EstAJDant <- function(C_hat, Y, lbd, se_est_J) {
 #' @inheritParams EstAJDant
 #'
 #' @return A vector of length \eqn{K}.
+#' @noRd
 
 Dantzig <- function(C_hat, y, lbd) {
   K <- length(y)

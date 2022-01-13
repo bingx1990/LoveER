@@ -12,10 +12,9 @@
 #' @param C_hat A \eqn{K} by \eqn{K} matrix.
 #'
 #' @return A \eqn{K} by \eqn{K} matrix.
+#' @noRd
 
 estOmega <- function(lbd, C_hat) {
-  # For a given lbd and C_hat, solve the C_hat^{-1}.
-  # Require: C_hat should be symmetric and square.
   K <- nrow(C_hat)
   omega <- matrix(0, K, K)
   for (i in 1:K) {
@@ -31,6 +30,7 @@ estOmega <- function(lbd, C_hat) {
 #' @inheritParams estOmega
 #'
 #' @return A vector of length \eqn{K}.
+#' @noRd
 
 solve_row <- function(col_ind, C_hat, lbd) {
   K <- nrow(C_hat)

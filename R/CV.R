@@ -1,5 +1,7 @@
-##### Functions to select tuning parameters via cross validation
-# source("Utilities.R")
+#####     Functions to select tuning parameters via cross validation
+
+
+### Functions to select delta
 
 
 #' @title Cross validation to select \eqn{\delta}
@@ -10,7 +12,7 @@
 #'   to find the value which minimizes the loss criterion \deqn{||\Sigma - A_I Cov(Z) A_I'||_{F-off}/(|I|(|I|-1))}.
 #'
 #' @inheritParams LOVE
-#' @inheritParams EstAI
+#' @param se_est The vector of the standard deviations of \eqn{p} features.
 #' @param deltaGrids A vector of numerical constants.
 #'
 #' @return A numeric constant. The selected optimal \eqn{\delta}.
@@ -59,6 +61,7 @@ CV_Delta <- function(X, deltaGrids, diagonal, se_est, merge) {
 #'    \item \code{pureVec} A vector of the indices of the estimated pure variables.
 #'    \item \code{fitted} The fitted value \eqn{A_I Cov(Z) A_I'}.
 #' }
+#' @noRd
 
 CalFittedSigma <- function(Sigma, delta, Ms, arg_Ms, se_est, diagonal, merge) {
   resultPureNode <- FindPureNode(abs(Sigma), delta, Ms, arg_Ms, se_est, merge)
@@ -84,6 +87,9 @@ CalFittedSigma <- function(Sigma, delta, Ms, arg_Ms, se_est, diagonal, merge) {
 
 
 
+### Functions to select lambda for estimating the precision matrix
+
+
 #' @title Cross validation to select \eqn{\lambda}
 #'
 #' @description Cross-validation to select \eqn{\lambda} for estimating the precision
@@ -93,9 +99,9 @@ CalFittedSigma <- function(Sigma, delta, Ms, arg_Ms, se_est, diagonal, merge) {
 #'    \deqn{<Cov(Z), \Omega> - log(det(\Omega)).}
 #'
 #' @inheritParams LOVE
-#' @inheritParams EstY
-#' @inheritParams EstC
 #' @param lbdGrids A vector of numerical constants.
+#' @param AI A \eqn{p} by \eqn{K} matrix.
+#' @param pureVec The estimated set of pure variables.
 #'
 #' @return The selected \eqn{\lambda}.
 

@@ -9,7 +9,7 @@
 #'
 #' @param Sigma A \eqn{p} by \eqn{p} matrix.
 #' @param optDelta A numerical value.
-#' @param se_est The vector of the standard deviations of \eqn{p} features.
+#' @inheritParams CV_Delta
 #' @inheritParams LOVE
 #'
 #' @return A list including: \itemize{
@@ -17,6 +17,8 @@
 #'    \item \code{pureVec} The vector of the indices of estimated pure variables.
 #'    \item \code{pureSignInd} The list of the indices of estimated pure variables.
 #' }
+#' @noRd
+
 
 EstAI <- function(Sigma, optDelta, se_est, merge) {
   off_Sigma <- abs(Sigma)
@@ -36,12 +38,44 @@ EstAI <- function(Sigma, optDelta, se_est, merge) {
 }
 
 
+#' Estimate the covariance matrix of \eqn{Z}.
+#'
+#' @inheritParams EstAI
+#' @inheritParams LOVE
+#' @inheritParams CV_lbd
+#'
+#' @return A \eqn{K} by \eqn{K} matrix.
+#' @noRd
+
+EstC <- function(Sigma, AI, diagonal) {
+  K <- ncol(AI)
+  C <- diag(0, K, K)
+  for (i in 1:K) {
+    groupi <- which(AI[ ,i] != 0)
+    sigmai <- as.matrix(abs(Sigma[groupi,groupi]))
+    tmpEntry <- sum(sigmai) - sum(diag(sigmai))
+    C[i,i] <- tmpEntry / (length(groupi) * (length(groupi) - 1))
+    if (!diagonal && i < K) {
+      for (j in (i+1):K) {
+        groupj <- which(AI[ ,j]!=0)
+        # adjust the sign for each row
+        sigmaij <- AI[groupi,i] * as.matrix(Sigma[groupi, groupj])
+        sigmaij <- t(AI[groupj, j] * t(sigmaij))
+        C[i,j] <- C[j,i] <- sum(sigmaij) / (length(groupi) * length(groupj))
+      }
+    }
+  }
+  return(C)
+}
+
+
 
 #' Function to calculate the maximal absolute value for each row of the given matrix.
 #'
 #' @inheritParams EstAI
 #'
 #' @return A numerical vector of \eqn{p} elements.
+#' @noRd
 
 FindRowMax <- function(Sigma) {
   p <- nrow(Sigma)
@@ -69,6 +103,7 @@ FindRowMax <- function(Sigma) {
 #'  \item \code{pureInd} A list of the estimated indices of the pure variables.
 #'  \item \code{pureVec} A vector of the estimated indices of the pure variables.
 #' }
+#' @noRd
 
 FindPureNode = function(off_Sigma, delta, Ms, arg_Ms, se_est, merge) {
   G <- list()
@@ -104,6 +139,7 @@ FindPureNode = function(off_Sigma, delta, Ms, arg_Ms, se_est, merge) {
 #' @inheritParams EstAI
 #'
 #' @return A vector of indices.
+#' @noRd
 
 FindRowMaxInd <- function(i, M, arg_M, vector, delta, se_est) {
   lbd <- delta * se_est[i] * se_est[arg_M] + delta * se_est[i] * se_est
@@ -124,6 +160,7 @@ FindRowMaxInd <- function(i, M, arg_M, vector, delta, se_est) {
 #' @inheritParams EstAI
 #'
 #' @return Logical. TRUE or FALSE.
+#' @noRd
 
 TestPure <- function(Sigma_row, rowInd, Si, Ms, arg_Ms, delta, se_est) {
   for (i in 1:length(Si)) {
@@ -147,7 +184,7 @@ TestPure <- function(Sigma_row, rowInd, Si, Ms, arg_Ms, delta, se_est) {
 #' @inheritParams EstAI
 #'
 #' @return A list of sign sub-partition of indices.
-
+#' @noRd
 
 FindSignPureNode <- function(pureList, Sigma) {
   signPureList <- list()
@@ -182,6 +219,7 @@ FindSignPureNode <- function(pureList, Sigma) {
 #' @param groupVec A new vector of indices of pure variables.
 #'
 #' @return A list of indices of pure variables.
+#' @noRd
 
 Merge <- function(groupList, groupVec) {
   # merge the new group with the previous ones which have common nodes
@@ -199,6 +237,7 @@ Merge <- function(groupList, groupVec) {
 }
 
 #' @describeIn Merge Merge pure variables via "union".
+#' @noRd
 
 Merge_union <- function(groupList, groupVec) {
   # merge the new group with the previous ones which have common nodes
@@ -229,7 +268,7 @@ Merge_union <- function(groupList, groupVec) {
 #' @param p An integer.
 #'
 #' @return A \eqn{p} by \eqn{K} matrix.
-
+#' @noRd
 
 RecoverAI <- function(estGroupList, p) {
   K <- length(estGroupList)
