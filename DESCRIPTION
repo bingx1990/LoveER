@@ -7,7 +7,7 @@ Authors@R: person("Xin", "Bing", email = "xb43@cornell.edu",
 Description: This package mainly consists of two procedures: latent-model based
   overlapping clustering and essential regression. The former performs variable
   clustering under a structured latent factor model while the latter contains prediction, 
-  estimation and inference under a structured latent factor regression model. 
+  estimation and inference under a structured latent factor regression model.  
 License: MIT License + file LICENSE
 Encoding: UTF-8
 LazyData: true
