@@ -17,6 +17,8 @@
 #'   \item \code{fitted_val} The fitted values.
 #'   \item \code{Z_pred} The predicted \strong{Z} matrix.
 #' }
+#'
+#' @noRd
 
 ER_prediction <- function(Y, X, Theta_hat) {
   n <- nrow(X)

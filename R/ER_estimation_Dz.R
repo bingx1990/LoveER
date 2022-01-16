@@ -13,6 +13,7 @@
 #' @param delta_opt The selected constant of \code{delta} returned by \code{\link{LOVE}}.
 #'
 #' @return A numeric vector of length \eqn{K}.
+#' @noRd
 
 ER_est_beta_dz <- function(Y, X, A_hat, C_hat, I_hat, delta_opt, mu = 0.5, lbd = 0.5) {
   n <- nrow(X); p <- ncol(X)
@@ -27,6 +28,7 @@ ER_est_beta_dz <- function(Y, X, A_hat, C_hat, I_hat, delta_opt, mu = 0.5, lbd =
 #' @param C A \eqn{K} by \eqn{K} matrix.
 #' @param h A vector of length \eqn{K}.
 #' @param mu,lbd Two numeric constants.
+#' @noRd
 
 Solve_dz <- function(C, h, mu, lbd) {
   K <- nrow(C)

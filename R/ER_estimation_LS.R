@@ -11,7 +11,8 @@
 #' @param Gamma_hat The estimated diagonal elements of \eqn{Cov(E)}.
 #' @param I_hat_partition The estimated partition of pure variables.
 #' @param BI A numeric matrix.
-
+#'
+#' @noRd
 
 ER_est_beta_LS  <- function(Y, X, Theta_hat, C_hat, Gamma_hat, I_hat, I_hat_partition, BI,
                             CI = T, alpha_level = 0.05, correction = NULL) {
@@ -51,6 +52,7 @@ ER_est_beta_LS  <- function(Y, X, Theta_hat, C_hat, Gamma_hat, I_hat, I_hat_part
 #' @param beta_hat The estimated \eqn{\beta}.
 #'
 #' @return A positive constant.
+#' @noRd
 
 Est_sigma2 <- function(Y, h, beta_hat, C_hat) {
   n <- length(Y)
@@ -67,6 +69,7 @@ Est_sigma2 <- function(Y, h, beta_hat, C_hat) {
 #' @param Omega_hat The estimated precision matrix of \eqn{Z}.
 #'
 #' @return A vector of length \eqn{K}.
+#' @noRd
 
 
 Comp_ASV <- function(sigma2_hat, BI, Theta_hat, Gamma_hat, beta_hat, Omega_hat,

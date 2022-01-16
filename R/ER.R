@@ -58,7 +58,7 @@ ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
   n <- nrow(X); p <- ncol(X)
 
   # center both Y and X
-  Y_center <-  mean(Y)
+  Y_center <- mean(Y)
   Y <- Y - Y_center
   X <- scale(X, T, F)
 
@@ -82,14 +82,16 @@ ER <- function(Y, X, res_LOVE, beta_est = "LS", mu = 0.5, lbd = 0.5,
     if (beta_est == "Dantzig") {
       beta_hat <- ER_est_beta_dz(Y, X, A_hat, C_hat, I_hat, optDelta, mu, lbd)
     }
-  } else {
+  } else if (betat_est == "LS") {
     # least squares estimation
     res_beta <- ER_est_beta_LS(Y, X, Theta_hat, C_hat, Gamma_hat, I_hat, I_hat_partition, BI,
                                CI = CI, alpha_level = alpha_level, correction = correction)
     beta_hat <- res_beta$beta
     beta_CIs <- res_beta$CIs
     beta_var <- res_beta$beta_var
-  }
+  } else
+    stop("Unknown method of estimating beta...\n")
+
   return(list(beta = beta_hat,
               beta_CIs = beta_CIs,
               beta_var = beta_var,
