@@ -4,10 +4,8 @@ Title: Latent-model based overlapping clustering and essential regression
 Version: 0.1.0
 Authors@R: person("Xin", "Bing", email = "xb43@cornell.edu",
   role = c("aut", "cre"))
-Description: This package mainly consists of two procedures: latent-model based
-  overlapping clustering and essential regression. The former performs variable
-  clustering under a structured latent factor model while the latter contains prediction, 
-  estimation and inference under a structured latent factor regression model.  
+Description: This package performs prediction, estimation and inference 
+  under a structured latent factor regression model.  
 License: MIT License + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -17,3 +15,4 @@ Imports:
     MASS,
     LOVE,
     stats
+URL: https://github.com/bingx1990/LoveER

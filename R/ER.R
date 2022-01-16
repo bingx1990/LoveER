@@ -10,7 +10,7 @@
 #'
 #' @param Y A vector of response with length \eqn{n}.
 #' @param X A \eqn{n} by \eqn{p} data matrix.
-#' @param res_LOVE The returned object from \code{\link{LOVE}}.
+#' @param res_LOVE The returned object from \code[LOVE]{\link{LOVE}}.
 #' @param beta_est The procedure used for estimating \eqn{\beta}. One of
 #'   \{\code{NULL}, "LS", "Dantzig"\}
 #' @param mu,lbd The tuning parameters used for estimating \eqn{\beta} via the
