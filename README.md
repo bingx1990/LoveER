@@ -6,33 +6,36 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-LoveER provides algorithms with statistical guarantees to
-
--   perform overlapping clustering of features under a structured latent
-    factor model;
--   perform prediction, estimation and inference under a structured
-    latent factor regression model.
+LoveER performs prediction of *Y*, estimation and inference of *β* with
+statistical guarantees under the structured latent factor regression
+model *X* = *A* *Z* + *E* and *Y* = *Z*<sup>⊤</sup>*β* + *ε*.
 
 ## Installation
 
-You can install the released version of LoveER from
-[CRAN](https://CRAN.R-project.org) with:
+<!-- the released version of LoveER from [CRAN](https://CRAN.R-project.org) with: -->
+<!-- ``` r -->
+<!-- install.packages("LoveER") -->
+<!-- ``` -->
+
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
-install.packages("LoveER")
+install.packages("devtools")
+devtools::install_github("bingx1990/LoveER")
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+It requires to pre-install the [LOVE](https://github.com/bingx1990/LOVE)
+package with
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("bingx1990/LoveER")
+devtools::install_github("bingx1990/LOVE")
 ```
 
 ## Example
 
-This is a basic example which shows you how to use two main functions of
-LoveER: LOVE and ER. We start by generating a synthetic data set.
+This is a basic example which shows you how to use the ER package. We
+start by generating a synthetic data set.
 
 ``` r
 p <- 6
@@ -49,25 +52,22 @@ Y <- Z %*% beta + eps
 ```
 
 The following code calls the LOVE function to perform overlapping
-clustering of the columns of the matrix.
+clustering of the columns of the **X** matrix. It should be noted that
+`pure_homo = TRUE` is required for downstream prediction of *Y* and
+inference of *β*.
 
 ``` r
+library(LOVE)
 library(LoveER)
-# basic example code
-res_LOVE <- LOVE(X)
-#> Selecting optimal delta by using data splitting...
-#> Finishing selecting optimal delta = 0.0279715 with leading constant 1 ...
-#> Estimating pure rows...
-#> Estimating C and Sigma_IJ...
-#> Selecting the tuning parameter for estimating Omega...
-#> Selecting the optimal lambda = 0.01398575 with leading constant 1 ...
-#> Estimating Omega...
-#> Estimating non-pure rows by Hard Thresholding ...
+# overlapping clustering
+res_LOVE <- LOVE(X, pure_homo = TRUE, delta = seq(0.1, 1.1 ,0.1))
 ```
 
-To predict , estimate the coefficient and provide confidence intervals
-of , the following code provides an example.
+To predict *Y*, estimate the coefficient *β* and provide confidence
+intervals of *β*, the following code provides an example.
 
 ``` r
+# use the output of LOVE to perform prediction and inference.
 res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
+res_ER <- ER(Y, X, res_LOVE, beta_est = "Dantzig", CI = FALSE)
 ```
