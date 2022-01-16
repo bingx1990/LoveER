@@ -21,7 +21,7 @@ ER(
 
 \item{X}{A \eqn{n} by \eqn{p} data matrix.}
 
-\item{res_LOVE}{The returned object from \code{\link{LOVE}}.}
+\item{res_LOVE}{The returned object from \code{\link[LOVE]{LOVE}}.}
 
 \item{beta_est}{The procedure used for estimating \eqn{\beta}. One of
 \{\code{NULL}, "LS", "Dantzig"\}}
