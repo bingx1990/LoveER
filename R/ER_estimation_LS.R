@@ -35,8 +35,8 @@ ER_est_beta_LS  <- function(Y, X, Theta_hat, C_hat, Gamma_hat, I_hat, I_hat_part
         alpha_level <- alpha_level / K
     }
 
-    CIs_beta <- cbind(lower = beta_est - qnorm(1 - alpha_level / 2) * sqrt(beta_var) / sqrt(n),
-                      upper = beta_est + qnorm(1 - alpha_level / 2) * sqrt(beta_var) / sqrt(n))
+    CIs_beta <- cbind(lower = beta_est - stats::qnorm(1 - alpha_level / 2) * sqrt(beta_var) / sqrt(n),
+                      upper = beta_est + stats::qnorm(1 - alpha_level / 2) * sqrt(beta_var) / sqrt(n))
   } else
     CIs_beta <- beta_var <- NULL
 

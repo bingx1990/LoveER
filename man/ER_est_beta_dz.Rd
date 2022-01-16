@@ -19,9 +19,11 @@ ER_est_beta_dz(Y, X, A_hat, C_hat, I_hat, delta_opt, mu = 0.5, lbd = 0.5)
 
 \item{delta_opt}{The selected constant of \code{delta} returned by \code{\link{LOVE}}.}
 
-\item{mu}{The tuning parameters used for estimating \eqn{\beta} via the Dantzig approach. The default value is 0.5.}
+\item{mu}{The tuning parameters used for estimating \eqn{\beta} via the
+Dantzig approach. The default value is 0.5.}
 
-\item{lbd}{The tuning parameters used for estimating \eqn{\beta} via the Dantzig approach. The default value is 0.5.}
+\item{lbd}{The tuning parameters used for estimating \eqn{\beta} via the
+Dantzig approach. The default value is 0.5.}
 }
 \value{
 A numeric vector of length \eqn{K}.

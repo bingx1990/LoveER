@@ -23,15 +23,17 @@ ER(
 
 \item{res_LOVE}{The returned object from \code{\link{LOVE}}.}
 
-\item{beta_est}{The procedure used for estimating \eqn{\beta}. One of \{\code{NULL}, "LS", "Dantzig"\}}
+\item{beta_est}{The procedure used for estimating \eqn{\beta}. One of
+\{\code{NULL}, "LS", "Dantzig"\}}
 
-\item{mu, lbd}{The tuning parameters used for estimating \eqn{\beta} via the Dantzig approach. The default value is 0.5.}
+\item{mu, lbd}{The tuning parameters used for estimating \eqn{\beta} via the
+Dantzig approach. The default value is 0.5.}
 
 \item{CI}{Logical. TRUE if confidence intervals are constructed.}
 
 \item{alpha_level}{The significance level. The default set to 0.05.}
 
-\item{correction}{The approach used for addressing the multiple testing problem.
+\item{correction}{Correction for addressing the multiple testing problem.
 Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".}
 }
 \value{
@@ -65,7 +67,8 @@ eps <- rnorm(n)
 beta <- c(1, -0.5)
 Y <- Z \%*\% beta + eps
 
-res_LOVE <- LOVE(X)
+res_LOVE <- LOVE::LOVE(X, pure_homo = TRUE, delta = seq(0.1, 1.1 ,0.1))
 res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
+res_ER <- ER(Y, X, res_LOVE, CI = TRUE, beta_est = "Dantzig")
 
 }

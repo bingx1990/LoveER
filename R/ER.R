@@ -11,11 +11,13 @@
 #' @param Y A vector of response with length \eqn{n}.
 #' @param X A \eqn{n} by \eqn{p} data matrix.
 #' @param res_LOVE The returned object from \code{\link{LOVE}}.
-#' @param beta_est The procedure used for estimating \eqn{\beta}. One of \{\code{NULL}, "LS", "Dantzig"\}
-#' @param mu,lbd The tuning parameters used for estimating \eqn{\beta} via the Dantzig approach. The default value is 0.5.
+#' @param beta_est The procedure used for estimating \eqn{\beta}. One of
+#'   \{\code{NULL}, "LS", "Dantzig"\}
+#' @param mu,lbd The tuning parameters used for estimating \eqn{\beta} via the
+#'   Dantzig approach. The default value is 0.5.
 #' @param CI Logical. TRUE if confidence intervals are constructed.
 #' @param alpha_level The significance level. The default set to 0.05.
-#' @param correction The approach used for addressing the multiple testing problem.
+#' @param correction Correction for addressing the multiple testing problem.
 #'  Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".
 #
 #' @return A list of objects including: \itemize{
@@ -43,8 +45,9 @@
 #' beta <- c(1, -0.5)
 #' Y <- Z %*% beta + eps
 #'
-#' res_LOVE <- LOVE(X)
+#' res_LOVE <- LOVE::LOVE(X, pure_homo = TRUE, delta = seq(0.1, 1.1 ,0.1))
 #' res_ER <- ER(Y, X, res_LOVE, CI = TRUE)
+#' res_ER <- ER(Y, X, res_LOVE, CI = TRUE, beta_est = "Dantzig")
 #'
 #' @export
 

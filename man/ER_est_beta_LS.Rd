@@ -39,7 +39,7 @@ ER_est_beta_LS(
 
 \item{alpha_level}{The significance level. The default set to 0.05.}
 
-\item{correction}{The approach used for addressing the multiple testing problem.
+\item{correction}{Correction for addressing the multiple testing problem.
 Either \code{NULL} or "Bonferroni". The default value is "Bonferroni".}
 }
 \description{
